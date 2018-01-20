@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <multiplication-equation
       v-bind:equation="equation"
       v-model="answer"
@@ -7,14 +7,39 @@
     />
     <icon v-if="right" name="check"/>
     <icon v-if="wrong" name="times"/>
+
+    <icon name="clock-o"/>
+      {{ mins }} min
+      {{ secs }} s
   </div>
 </template>
 
 <script>
 import Icon from 'vue-awesome';
-import MultiplicationEquation from './module/MultiplicationEquation.vue';
+import MultiplicationEquation from './multiplication-equation.vue';
+
+const model = {
+  limit: 12,
+  answers: [],
+  answer: null,
+  right: false,
+  wrong: false,
+  maxQuestions: 2,
+  equation: [],
+  startTime: null,
+  duration: 0,
+};
 
 const methods = {
+  setup() {
+    this.equation = this.getNewEquation();
+    this.startTime = Date.now();
+    this.duration = 0;
+    setInterval(() => {
+      this.duration++;
+    }, 1000);
+  },
+
   getNewEquation() {
     const a = Math.round(Math.random() * model.limit);
     const b = Math.round(Math.random() * model.limit);
@@ -32,29 +57,28 @@ const methods = {
     model.equation = this.getNewEquation();
   },
 
+  finishUp() {
+    model.duration = Math.round((Date.now() - model.startTime) / 1000);
+    this.$cookie.set('multiplication/challenge', JSON.stringify(model));
+    this.$router.push('/multiplication/challenge/result');
+  },
+
   answered(correct) {
     model.right = correct == true;
     model.wrong = correct == false;
     model.answers.push({ equation: model.equation.slice(0), answer: this.answer, correct });
-    console.log('answers', model.answers);
 
     setTimeout(() => {
+      if (model.answers.length >= model.maxQuestions) {
+        this.finishUp();
+      }
       this.reset();
     }, 1000);
   },
 };
 
-const model = {
-  limit: 12,
-  answers: [],
-  answer: null,
-  right: false,
-  wrong: false,
-  equation: methods.getNewEquation(),
-};
-
 export default {
-  name: 'app',
+  name: 'multiplication-challenge',
   components: {
     Icon,
     MultiplicationEquation,
@@ -62,6 +86,17 @@ export default {
   data() {
     return model;
   },
-  methods
+  methods,
+  computed: {
+    mins() {
+      return Math.floor(this.duration / 60);
+    },
+    secs() {
+      return Math.round(this.duration - this.mins * 60 );
+    }
+  },
+  mounted() {
+    this.setup();
+  }
 }
 </script>

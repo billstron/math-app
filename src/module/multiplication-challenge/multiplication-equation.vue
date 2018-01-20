@@ -20,9 +20,9 @@
 </template>
 
 <script>
-import PButton from '../components/PButton.vue';
-import NumberDisplay from '../components/NumberDisplay.vue';
-import NumberInput from '../components/NumberInput.vue';
+import PButton from '../../components/PButton.vue';
+import NumberDisplay from '../../components/NumberDisplay.vue';
+import NumberInput from '../../components/NumberInput.vue';
 
 const methods = {
   checkIt() {
