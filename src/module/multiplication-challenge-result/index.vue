@@ -1,7 +1,5 @@
 <template>
   <div>
-    <router-link to="/">Home</router-link>
-
     <div>
       <icon name="check"/> {{ numberCorrect }}
     </div>

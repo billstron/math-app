@@ -28,16 +28,24 @@ const model = {
   equation: [],
   startTime: null,
   duration: 0,
+  interval: null,
 };
 
 const methods = {
   setup() {
+    this.answers = [];
+    this.right = false;
+    this.wrong = false;
     this.equation = this.getNewEquation();
     this.startTime = Date.now();
     this.duration = 0;
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.duration++;
     }, 1000);
+  },
+
+  teardown() {
+    clearInterval(this.interval);
   },
 
   getNewEquation() {
@@ -96,7 +104,12 @@ export default {
     }
   },
   mounted() {
+    console.log('mounted');
     this.setup();
-  }
+  },
+  beforeDestroy() {
+    console.log('before destroy');
+    this.teardown();
+  },
 }
 </script>
