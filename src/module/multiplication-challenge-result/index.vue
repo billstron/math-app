@@ -1,24 +1,27 @@
 <template>
-  <div>
-    <router-link to="/">Home</router-link>
-
-    <div>
-      <icon name="check"/> {{ numberCorrect }}
+  <div class="result">
+    <h1>Latest Challenge</h1>
+    <div class="metric-row">
+      <icon class="right" name="check"/> {{ numberCorrect }}
     </div>
-    <div>
-      <icon name="times"/> {{ numberWrong }}
+    <div class="metric-row">
+      <icon class="wrong" name="times"/> {{ numberWrong }}
     </div>
-    <div v-if="duration">
+    <div class="metric-row">
       <icon name="clock-o"/>
         {{ Math.floor(duration / 60) }} min
         {{ duration - Math.floor(duration / 60) * 60 }} s
     </div>
-    <router-link to="/multiplication/challenge">Try Again</router-link>
+    <p-button
+      :click="tryAgain"
+      label="Try Again"
+    />
   </div>
 </template>
 
 <script>
 import Icon from 'vue-awesome';
+import PButton from '../../components/PButton.vue';
 
 const methods = {
   setup() {
@@ -26,6 +29,10 @@ const methods = {
     this.numberCorrect = data.answers.filter(({ correct }) => correct ).length;
     this.numberWrong = data.answers.filter(({ correct }) => correct == false ).length;
     this.duration = data.duration || undefined;
+  },
+
+  tryAgain () {
+    this.$router.push('/multiplication/challenge');
   }
 };
 
@@ -39,6 +46,7 @@ export default {
   name: 'multiplication-challenge-result',
   components: {
     Icon,
+    PButton
   },
   methods,
   data() {
@@ -50,3 +58,28 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.result {
+
+}
+
+.metric-row {
+  font-size: 24px;
+  margin: 20px 0;
+  padding-left: 50px;
+}
+
+.fa-icon {
+  width: 50px;
+}
+
+.right {
+  color: green;
+}
+
+
+.wrong {
+  color: red;
+}
+</style>

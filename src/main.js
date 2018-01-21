@@ -6,10 +6,13 @@ import VueRouter from 'vue-router';
 import VueCookie from 'vue-cookie';
 
 import router from './router';
+import App from './app.vue';
 
 Vue.use(VueRouter);
 Vue.use(VueCookie);
 
 const app = new Vue({
-  router
-}).$mount('#app');
+  router,
+  el: '#app',
+  render: h => h(App)
+});

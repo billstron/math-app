@@ -4,6 +4,7 @@
     v-bind:value="value"
     v-on:input="update($event.target.value)"
     v-on:keyup.enter="onEnter"
+    autofocus="autofocus"
   />
 </template>
 
@@ -35,7 +36,20 @@ export default {
 </script>
 
 <style scoped>
-  div {
+  input {
     font-size: 44px;
+    float: left;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-bottom: 1px solid black;
+    width: 100px;
+    text-align: center;
+    padding-bottom: 0;
+    line-height: 44px;
+  }
+
+  input:focus {
+    outline: none;
   }
 </style>

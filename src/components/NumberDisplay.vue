@@ -12,5 +12,6 @@ export default {
 <style scoped>
   div {
     font-size: 44px;
+    float: left;
   }
 </style>
