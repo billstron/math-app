@@ -1,6 +1,7 @@
 <template>
   <div class="challenge">
     <multiplication-equation
+      tag="input-tag"
       v-bind:equation="equation"
       v-model="answer"
       v-on:answered="answered"
@@ -108,11 +109,9 @@ export default {
     }
   },
   mounted() {
-    console.log('mounted');
     this.setup();
   },
   beforeDestroy() {
-    console.log('before destroy');
     this.teardown();
   },
 }

@@ -4,7 +4,7 @@
     v-bind:value="value"
     v-on:input="update($event.target.value)"
     v-on:keyup.enter="onEnter"
-    id="this-button"
+    v-bind:id="tag"
   />
 </template>
 
@@ -27,36 +27,30 @@ const methods = {
 
 export default {
   name: 'number-input',
-  props: [ 'value' ],
+  props: [ 'value', 'tag' ],
   methods,
   data() {
     return model;
   },
-  mounted() {
-    console.log('mounted');
-    // if (!('autofocus' in document.createElement('input'))) {
-    document.getElementById('this-button').focus();
-    // }
-  }
 }
 </script>
 
 <style scoped>
-  input {
-    font-size: 44px;
-    float: left;
-    border-left: none;
-    border-right: none;
-    border-top: none;
-    border-bottom: 1px solid black;
-    width: 80px;
-    text-align: center;
-    padding-bottom: 0;
-    line-height: 44px;
-    border-radius: 0;
-  }
+input {
+  font-size: 40px;
+  float: left;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  border-bottom: 1px solid black;
+  width: 80px;
+  text-align: center;
+  padding-bottom: 0;
+  line-height: 44px;
+  border-radius: 0;
+}
 
-  input:focus {
-    outline: none;
-  }
+input:focus {
+  outline: none;
+}
 </style>

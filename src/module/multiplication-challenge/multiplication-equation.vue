@@ -10,6 +10,7 @@
       />
       <span class="math-sign">=</span>
       <number-input
+        tag="input-tag"
         v-bind:value="value"
         v-on:input="onInput"
         v-on:enter="checkIt"
@@ -30,21 +31,23 @@ import NumberDisplay from '../../components/NumberDisplay.vue';
 import NumberInput from '../../components/NumberInput.vue';
 
 const methods = {
-  checkIt() {
+  checkIt(event) {
+    document.getElementById('input-tag').focus();
     if (this.value == null) {
       return null;
     }
     const correctAnswer = this.equation.reduce((ans, next) => ans * next, 1);
     this.$emit('answered', correctAnswer == this.value);
   },
+
   onInput (value) {
     this.$emit('input', value);
-  }
+  },
 }
 
 export default {
   name: 'multiplication-equation',
-  props: [ 'equation', 'value' ],
+  props: [ 'equation', 'value', 'tag' ],
   components: {
     Icon,
     PButton,
@@ -65,17 +68,18 @@ export default {
 
 .inner {
   display: inline-block;
-  margin: 20px auto;
+  margin: 5% auto;
 }
 
 .math-sign {
   float: left;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   line-height: 44px;
   margin-left: 10px;
   margin-right: 10px;
 }
+
 .fa-icon {
   margin: 10px;
 }

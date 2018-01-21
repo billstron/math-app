@@ -31,7 +31,7 @@ export default {
   .body-content {
     max-width: 600px;
     margin: auto;
-    padding: 10px 20px;
+    padding: 0;
     position: relative;
   }
 
