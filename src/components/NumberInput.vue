@@ -5,6 +5,7 @@
     v-on:input="update($event.target.value)"
     v-on:keyup.enter="onEnter"
     autofocus="autofocus"
+    id="this-button"
   />
 </template>
 
@@ -31,6 +32,11 @@ export default {
   methods,
   data() {
     return model;
+  },
+  mounted() {
+    if (!('autofocus' in document.createElement('input'))) {
+      document.getElementById('this-button').focus();
+    }
   }
 }
 </script>
@@ -47,6 +53,7 @@ export default {
     text-align: center;
     padding-bottom: 0;
     line-height: 44px;
+    border-radius: 0;
   }
 
   input:focus {
