@@ -50,8 +50,10 @@ input {
   width: 80px;
   text-align: center;
   padding-bottom: 0;
-  line-height: 44px;
+  line-height: 40px;
   border-radius: 0;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 input:focus {

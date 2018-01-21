@@ -33,6 +33,7 @@ export default {
     margin: auto;
     padding: 0;
     position: relative;
+    text-align: center;
   }
 
   .fa-icon {

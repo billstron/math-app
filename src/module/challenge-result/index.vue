@@ -25,14 +25,15 @@ import PButton from '../../components/PButton.vue';
 
 const methods = {
   setup() {
-    const data = JSON.parse(this.$cookie.get('multiplication/challenge'));
+    const mathType = this.$router.currentRoute.params.mathType;
+    const data = JSON.parse(this.$cookie.get(`challenge/${mathType}`));
     this.numberCorrect = data.answers.filter(({ correct }) => correct ).length;
     this.numberWrong = data.answers.filter(({ correct }) => correct == false ).length;
     this.duration = data.duration || undefined;
   },
 
   tryAgain () {
-    this.$router.push('/multiplication/challenge');
+    this.$router.push(`/challenge/${this.mathType}`);
   }
 };
 
@@ -43,7 +44,7 @@ const model = {
 };
 
 export default {
-  name: 'multiplication-challenge-result',
+  name: 'challenge-result',
   components: {
     Icon,
     PButton
@@ -60,6 +61,9 @@ export default {
 </script>
 
 <style scoped>
+h1 {
+  margin: 5px 0;
+}
 .result {
 
 }
@@ -68,6 +72,7 @@ export default {
   font-size: 24px;
   margin: 20px 0;
   padding-left: 50px;
+  text-align: left;
 }
 
 .fa-icon {

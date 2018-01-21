@@ -73,8 +73,8 @@ const methods = {
 
   finishUp() {
     model.duration = Math.round((Date.now() - model.startTime) / 1000);
-    this.$cookie.set('multiplication/challenge', JSON.stringify(model));
-    this.$router.push('/multiplication/challenge/result');
+    this.$cookie.set(`challenge/${this.mathType}`, JSON.stringify(model));
+    this.$router.push(`/challenge/${this.mathType}/result`);
   },
 
   answered(correct) {
@@ -110,7 +110,6 @@ export default {
     }
   },
   beforeMount() {
-    console.log(this.$router.currentRoute.params);
     this.mathType = this.$router.currentRoute.params.mathType;
   },
   mounted() {
@@ -129,7 +128,7 @@ export default {
 }
 
 .timer {
-  margin: 20px auto;
+  margin: 10px auto;
   text-align: center;
   font-size: 20px;
 }
