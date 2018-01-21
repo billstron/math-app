@@ -49,7 +49,7 @@ export default {
     border-right: none;
     border-top: none;
     border-bottom: 1px solid black;
-    width: 100px;
+    width: 80px;
     text-align: center;
     padding-bottom: 0;
     line-height: 44px;

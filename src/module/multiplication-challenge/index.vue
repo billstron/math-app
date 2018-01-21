@@ -120,7 +120,7 @@ export default {
 
 <style scoped>
 .challenge {
-  padding-top: 50px;
+  padding-top: 0%;
   text-align: center;
 }
 
