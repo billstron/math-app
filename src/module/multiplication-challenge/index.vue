@@ -1,16 +1,20 @@
 <template>
-  <div>
+  <div class="challenge">
     <multiplication-equation
       v-bind:equation="equation"
       v-model="answer"
       v-on:answered="answered"
     />
-    <icon v-if="right" name="check"/>
-    <icon v-if="wrong" name="times"/>
+    <div class="overlay" v-if="right || wrong">
+      <icon class="answer right" v-if="right" name="check"/>
+      <icon class="answer wrong" v-if="wrong" name="times"/>
+    </div>
 
-    <icon name="clock-o"/>
-      {{ mins }} min
-      {{ secs }} s
+    <div class="timer">
+      <icon name="clock-o"/>
+        {{ mins }} min
+        {{ secs }} s
+    </div>
   </div>
 </template>
 
@@ -24,7 +28,7 @@ const model = {
   answer: null,
   right: false,
   wrong: false,
-  maxQuestions: 2,
+  maxQuestions: 20,
   equation: [],
   startTime: null,
   duration: 0,
@@ -113,3 +117,41 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.challenge {
+  padding-top: 50px;
+  text-align: center;
+}
+
+.timer {
+  margin: 20px auto;
+  text-align: center;
+  font-size: 20px;
+}
+
+.overlay {
+  float: left;
+  width: 100%;
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  padding: 50px 0;
+  background-color: #ffffff4a
+}
+
+.answer {
+  display: inline-block;
+  font-size: 100px;
+}
+
+.answer.right {
+  color: green;
+}
+
+.answer.wrong {
+  color: red;
+}
+</style>
