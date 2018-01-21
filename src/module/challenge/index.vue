@@ -1,7 +1,7 @@
 <template>
   <div class="challenge">
-    <multiplication-equation
-      tag="input-tag"
+    <equation
+      v-bind:mathType="mathType"
       v-bind:equation="equation"
       v-model="answer"
       v-on:answered="answered"
@@ -21,7 +21,7 @@
 
 <script>
 import Icon from 'vue-awesome';
-import MultiplicationEquation from './multiplication-equation.vue';
+import Equation from './equation.vue';
 
 const model = {
   limit: 12,
@@ -34,6 +34,7 @@ const model = {
   startTime: null,
   duration: 0,
   interval: null,
+  mathType: null,
 };
 
 const methods = {
@@ -91,10 +92,10 @@ const methods = {
 };
 
 export default {
-  name: 'multiplication-challenge',
+  name: 'challenge',
   components: {
     Icon,
-    MultiplicationEquation,
+    Equation,
   },
   data() {
     return model;
@@ -107,6 +108,10 @@ export default {
     secs() {
       return Math.round(this.duration - this.mins * 60 );
     }
+  },
+  beforeMount() {
+    console.log(this.$router.currentRoute.params);
+    this.mathType = this.$router.currentRoute.params.mathType;
   },
   mounted() {
     this.setup();

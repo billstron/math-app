@@ -1,18 +1,18 @@
 import VueRouter from 'vue-router';
 
 import Home from './module/home/index.vue';
-import MultiChallenge from './module/multiplication-challenge/index.vue';
-import MultiChallengeResult from './module/multiplication-challenge-result/index.vue';
+import Challenge from './module/challenge/index.vue';
+import ChallengeResult from './module/challenge-result/index.vue';
 
 const routes = [{
   path: '/',
   component: Home,
 }, {
-  path: '/multiplication/challenge',
-  component: MultiChallenge,
+  path: '/challenge/:mathType',
+  component: Challenge,
 }, {
-  path: '/multiplication/challenge/result',
-  component: MultiChallengeResult,
+  path: '/challenge/:mathType/result',
+  component: ChallengeResult,
 },];
 
 

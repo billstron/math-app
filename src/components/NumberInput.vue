@@ -20,6 +20,10 @@ const methods = {
   },
 
   update (value) {
+    if (value.length == 0 || value == '-') {
+      this.currentValue = value;
+      return null;
+    }
     this.currentValue = Number(value);
     this.$emit('input', this.currentValue);
   }
