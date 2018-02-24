@@ -33,7 +33,8 @@ const methods = {
   },
 
   tryAgain () {
-    this.$router.push(`/challenge/${this.mathType}`);
+    const mathType = this.$router.currentRoute.params.mathType;
+    this.$router.push(`/challenge/${mathType}`);
   }
 };
 

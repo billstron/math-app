@@ -81,7 +81,6 @@ export default {
   data: () => model,
   methods,
   mounted () {
-    console.log('mounted');
     this.signIcon = signMap[this.mathType].icon;
     this.compute = signMap[this.mathType].fn;
   },

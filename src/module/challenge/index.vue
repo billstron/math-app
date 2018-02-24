@@ -11,10 +11,16 @@
       <icon class="answer wrong" v-if="wrong" name="times"/>
     </div>
 
-    <div class="timer">
-      <icon name="clock-o"/>
-        {{ mins }} min
-        {{ secs }} s
+    <div class="info-row">
+      <div class="timer">
+        <icon name="clock-o"/>
+          {{ mins }} min
+          {{ secs }} s
+      </div>
+      <div class="count">
+        <icon name="hashtag"/>
+        {{ answers.length + 1 }} / {{ maxQuestions }}
+      </div>
     </div>
   </div>
 </template>
@@ -24,7 +30,11 @@ import Icon from 'vue-awesome';
 import Equation from './equation.vue';
 
 const model = {
-  limit: 12,
+  limits: {
+    addition: 30,
+    subtraction: 30,
+    multiplication: 12
+  },
   answers: [],
   answer: null,
   right: false,
@@ -55,9 +65,12 @@ const methods = {
   },
 
   getNewEquation() {
-    const a = Math.round(Math.random() * model.limit);
-    const b = Math.round(Math.random() * model.limit);
-    const candidate = [ a, b ];
+    const a = Math.round(Math.random() * model.limits[this.mathType]);
+    const b = Math.round(Math.random() * model.limits[this.mathType]);
+    let candidate = [ a, b ];
+    if (this.mathType == 'subtraction') {
+      candidate = candidate.sort((a, b) => b - a);
+    }
     if (model.answers.find(({ equation, correct }) => correct && candidate[0] == equation[0] && candidate[1] == equation[1]) == null) {
       return candidate;
     }
@@ -127,10 +140,26 @@ export default {
   text-align: center;
 }
 
+.info-row {
+
+}
+
 .timer {
-  margin: 10px auto;
-  text-align: center;
+  margin: 20px auto;
+  padding-left: 7%;
+  width: 43%;
+  text-align: left;
   font-size: 20px;
+  float: left;
+}
+
+.count {
+  margin: 20px auto;
+  padding-right: 7%;
+  width: 43%;
+  text-align: right;
+  font-size: 20px;
+  float: left;
 }
 
 .overlay {
@@ -141,7 +170,7 @@ export default {
   top: 0;
   bottom: 0;
   left: 0;
-  padding: 50px 0;
+  padding: 20px 0;
   background-color: #ffffff4a
 }
 
