@@ -17,13 +17,12 @@
       />
       <number-input
         tag="input-tag"
-        v-bind:value="value"
-        v-on:input="onInput"
+        v-model="answer"
         v-on:enter="checkIt"
       />
     </div>
     <p-button
-      :disabled="typeof value !== 'number'"
+      :disabled="isNaN(Number(answer))"
       :click="checkIt"
       label="Check It"
     />
@@ -37,7 +36,7 @@ import NumberInput from '../../components/NumberInput.vue';
 
 export default {
   name: 'ChallengeEquation',
-  props: [ 'equation', 'value', 'tag', 'mathType' ],
+  props: [ 'equation', 'tag', 'mathType' ],
   components: {
     PButton,
     NumberDisplay,
@@ -59,6 +58,7 @@ export default {
           fn: (a, b) => a - b,
         }
       },
+      answer: undefined,
     };
   },
   computed: {
@@ -66,24 +66,26 @@ export default {
       return this.signMap[this.mathType].icon;
     },
   },
+  watch: {
+    equation() {
+      this.answer = undefined;
+    },
+  },
   methods: {
     checkIt() {
       document.getElementById('input-tag').focus();
-      if (this.value == null) {
+      const { answer } = this;
+      if (answer == null) {
         return null;
       }
       const correctAnswer = this.compute(this.equation[0], this.equation[1]);
-      this.$emit('answered', correctAnswer == this.value);
+      this.$emit('answered', { correct: correctAnswer == answer, answer });
+      this.answer = undefined;
     },
 
-    onInput (value) {
-      this.$emit('input', value);
+    compute(a, b) {
+      return this.signMap[this.mathType].fn(a, b);
     },
-
-    compute: () => null,
-  },
-  mounted () {
-    this.compute = this.signMap[this.mathType].fn;
   },
 }
 </script>

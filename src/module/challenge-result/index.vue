@@ -20,40 +20,47 @@
 </template>
 
 <script>
+import { useChallenge } from '@/store';
 import PButton from '../../components/PButton.vue';
-
-const methods = {
-  setup() {
-    const mathType = this.$router.currentRoute.params.mathType;
-    const data = JSON.parse(this.$cookie.get(`challenge/${mathType}`));
-    this.numberCorrect = data.answers.filter(({ correct }) => correct ).length;
-    this.numberWrong = data.answers.filter(({ correct }) => correct == false ).length;
-    this.duration = data.duration || undefined;
-  },
-
-  tryAgain () {
-    const mathType = this.$router.currentRoute.params.mathType;
-    this.$router.push(`/challenge/${mathType}`);
-  }
-};
-
-const model = {
-  numberCorrect: null,
-  numberWrong: null,
-  duration: null,
-};
 
 export default {
   name: 'challenge-result',
   components: {
     PButton
   },
-  methods,
+  setup() {
+    const challenge = useChallenge();
+    return { challenge };
+  },
   data() {
-    return model;
+    return {
+      numberCorrect: null,
+      numberWrong: null,
+      duration: null,
+    };
+  },
+  computed: {
+    lastCompleted() {
+      return this.challenge.lastCompleted;
+    },
+  },
+  methods: {
+    setup() {
+      const { answers = [], duration } = this.lastCompleted;
+      this.numberCorrect = answers.filter(({ correct }) => correct ).length;
+      this.numberWrong = answers.filter(({ correct }) => correct == false ).length;
+      this.duration = duration || undefined;
+    },
+
+    tryAgain () {
+      const { type } = this.lastCompleted;
+      if (type) {
+        return this.$router.push(`/challenge/${type}`);
+      }
+      return this.$router.push(`/`);
+    }
   },
   mounted() {
-    console.log('mounted');
     this.setup();
   }
 };

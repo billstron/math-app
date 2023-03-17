@@ -3,7 +3,6 @@
     <challenge-equation
       :mathType="mathType"
       :equation="equation"
-      v-model="answer"
       v-on:answered="answered"
     />
     <div class="overlay" v-if="right || wrong">
@@ -19,99 +18,48 @@
       </div>
       <div class="count">
         <fa-icon icon="fa-hashtag"/>
-        {{ answers.length + 1 }} / {{ maxQuestions }}
+        {{ this.previousAnswers.length + 1 }} / {{ maxQuestions }}
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { useChallenge } from '@/store';
 import ChallengeEquation from './ChallengeEquation.vue';
-
-const model = {
-  limits: {
-    addition: 30,
-    subtraction: 30,
-    multiplication: 12
-  },
-  answers: [],
-  answer: null,
-  right: false,
-  wrong: false,
-  maxQuestions: 20,
-  equation: [],
-  startTime: null,
-  duration: 0,
-  interval: null,
-};
-
-const methods = {
-  setup() {
-    this.answers = [];
-    this.right = false;
-    this.wrong = false;
-    this.equation = this.getNewEquation();
-    this.startTime = Date.now();
-    this.duration = 0;
-    this.interval = setInterval(() => {
-      this.duration++;
-    }, 1000);
-  },
-
-  teardown() {
-    clearInterval(this.interval);
-  },
-
-  getNewEquation() {
-    const a = Math.round(Math.random() * model.limits[this.mathType]);
-    const b = Math.round(Math.random() * model.limits[this.mathType]);
-    let candidate = [ a, b ];
-    if (this.mathType == 'subtraction') {
-      candidate = candidate.sort((a, b) => b - a);
-    }
-    if (model.answers.find(({ equation, correct }) => correct && candidate[0] == equation[0] && candidate[1] == equation[1]) == null) {
-      return candidate;
-    }
-    return this.getNewEquation();
-  },
-
-  reset() {
-    model.answer = null;
-    model.right = false;
-    model.wrong = false;
-    model.equation = this.getNewEquation();
-  },
-
-  finishUp() {
-    model.duration = Math.round((Date.now() - model.startTime) / 1000);
-    this.$cookie.set(`challenge/${this.mathType}`, JSON.stringify(model));
-    this.$router.push(`/challenge/${this.mathType}/result`);
-  },
-
-  answered(correct) {
-    model.right = correct == true;
-    model.wrong = correct == false;
-    model.answers.push({ equation: model.equation.slice(0), answer: this.answer, correct });
-
-    setTimeout(() => {
-      if (model.answers.length >= model.maxQuestions) {
-        this.finishUp();
-      }
-      this.reset();
-    }, 1000);
-  },
-};
 
 export default {
   name: 'ChallengeMain',
   components: {
     ChallengeEquation,
   },
-  data() {
-    return model;
+  setup() {
+    const challenge = useChallenge();
+
+    return {
+      challenge,
+    };
   },
-  methods,
+  data() {
+    return {
+      limits: {
+        addition: 30,
+        subtraction: 30,
+        multiplication: 12
+      },
+      right: false,
+      wrong: false,
+      maxQuestions: 2,
+      equation: [],
+      startTime: null,
+      duration: 0,
+      interval: null,
+    };
+  },
   computed: {
+    previousAnswers() {
+      return this.challenge.currentAnswers;
+    },
     mins() {
       return Math.floor(this.duration / 60);
     },
@@ -123,11 +71,58 @@ export default {
       return mathType;
     }
   },
+  methods: {
+    getNewEquation() {
+      const a = Math.round(Math.random() * this.limits[this.mathType]);
+      const b = Math.round(Math.random() * this.limits[this.mathType]);
+      let candidate = [ a, b ];
+      if (this.mathType == 'subtraction') {
+        candidate = candidate.sort((a, b) => b - a);
+      }
+      if (this.previousAnswers.find(({ equation, correct }) => correct && candidate[0] == equation[0] && candidate[1] == equation[1]) == null) {
+        return candidate;
+      }
+      return this.getNewEquation();
+    },
+
+    reset() {
+      this.right = false;
+      this.wrong = false;
+      this.equation = this.getNewEquation();
+    },
+
+    finishUp() {
+      this.duration = Math.round((Date.now() - this.startTime) / 1000);
+      this.challenge.complete(this.duration);
+      this.$router.push(`/challenge/${this.mathType}/result`);
+    },
+
+    answered({ correct, answer }) {
+      this.right = correct == true;
+      this.wrong = correct == false;
+      this.challenge.addAnswer({ equation: this.equation.slice(0), answer, correct });
+
+      setTimeout(() => {
+        if (this.previousAnswers.length >= this.maxQuestions) {
+          this.finishUp();
+        }
+        this.reset();
+      }, 1000);
+    },
+  },
   mounted() {
-    this.setup();
+    this.challenge.start(this.mathType);
+    this.right = false;
+    this.wrong = false;
+    this.equation = this.getNewEquation();
+    this.startTime = Date.now();
+    this.duration = 0;
+    this.interval = setInterval(() => {
+      this.duration++;
+    }, 1000);
   },
   beforeUnmount() {
-    this.teardown();
+    clearInterval(this.interval);
   },
 }
 </script>

@@ -1,40 +1,53 @@
 <template>
   <input
     type="tel"
-    v-bind:value="value"
-    v-on:input="update($event.target.value)"
+    :value="currentValue"
+    @input="update"
     v-on:keyup.enter="onEnter"
-    v-bind:id="tag"
+    :id="tag"
   />
 </template>
 
 <script>
 
-const model = {
-  currentValue: undefined
-};
-
-const methods = {
-  onEnter() {
-    this.$emit('enter', this.currentValue);
-  },
-
-  update (value) {
-    if (value.length == 0 || value == '-') {
-      this.currentValue = value;
-      return null;
-    }
-    this.currentValue = Number(value);
-    this.$emit('input', this.currentValue);
-  }
-};
-
 export default {
   name: 'number-input',
-  props: [ 'value', 'tag' ],
-  methods,
+  props: [ 'modelValue', 'tag' ],
+  emits: ['update:modelValue'],
   data() {
-    return model;
+    return {
+      currentValue: undefined,
+      prevValue: undefined,
+    };
+  },
+  watch: {
+    modelValue(value) {
+      this.prevValue = this.currentValue;
+      this.currentValue = value;
+    },
+  },
+  methods: {
+    onEnter() {
+      this.$emit('enter', this.currentValue);
+    },
+
+    update ($event) {
+      const { value } = $event.target;
+      if (isNaN(Number(value))) {
+        this.currentValue = this.prevValue;
+      } else {
+        this.currentValue = Number(value);
+      }
+      
+      if (this.currentValue !== this.prevValue) {
+        this.$emit('update:modelValue', value)
+      }
+      this.prevValue = this.currentValue;
+    },
+  },
+  mounted() {
+    this.prevValue = this.currentValue;
+    this.currentValue = this.value;
   },
 }
 </script>
