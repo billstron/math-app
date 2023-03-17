@@ -110,7 +110,10 @@ export default {
     },
   },
   mounted() {
-    this.challenge.start(this.mathType);
+    const { state } = this.challenge.current || {};
+    if (state !== 'UNDERWAY') {
+      this.challenge.start(this.mathType);
+    }
     this.right = false;
     this.wrong = false;
     this.equation = this.getNewEquation();
