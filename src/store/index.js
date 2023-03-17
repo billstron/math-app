@@ -1,16 +1,21 @@
-import { defineStore, createPinia } from 'pinia'
+import { defineStore, createPinia } from 'pinia';
+import { useStorage } from '@vueuse/core'
 
 export const useChallenge = defineStore('challenge', {
   state: () => ({
-    list: [],
-    current: {},
+    list: useStorage('challenge/list', []),
+    current: useStorage('challenge/current', {
+      state: 'NOT_STARTED',
+    }),
   }),
   getters: {
     count: (state) => state.list.length,
     lastCompleted: (state) => {
-      return state.list.filter(({ completed }) => completed).slice(-1)[0];
+      return state.list.filter(({ state }) => state === 'COMPLETED').slice(-1)[0];
     },
-    currentAnswers: (state) => state.current.answers || [],
+    currentAnswers: (state) => {
+      return state.current.answers || [];
+    },
   },
   actions: {
     start(type) {
@@ -18,14 +23,14 @@ export const useChallenge = defineStore('challenge', {
         type,
         answers: [],
         duration: 0,
-        completed: false,
+        state: 'UNDERWAY',
       };
     },
     addAnswer({ equation, answer, correct }) {
       this.current.answers.push({ equation, answer, correct });
     },
     complete(duration) {
-      this.current.completed = true;
+      this.current.state = 'COMPLETED';
       this.current.duration = duration;
       this.list.push({ ...this.current });
       this.current = {};

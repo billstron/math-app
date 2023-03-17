@@ -100,9 +100,8 @@ export default {
     answered({ correct, answer }) {
       this.right = correct == true;
       this.wrong = correct == false;
-      this.challenge.addAnswer({ equation: this.equation.slice(0), answer, correct });
-
       setTimeout(() => {
+        this.challenge.addAnswer({ equation: this.equation.slice(0), answer, correct });
         if (this.previousAnswers.length >= this.maxQuestions) {
           this.finishUp();
         }
