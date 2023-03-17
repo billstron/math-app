@@ -2,13 +2,13 @@
   <div class="result">
     <h1>Latest Challenge</h1>
     <div class="metric-row">
-      <icon class="right" name="check"/> {{ numberCorrect }}
+      <fa-icon class="right" icon="fa-check"/> {{ numberCorrect }}
     </div>
     <div class="metric-row">
-      <icon class="wrong" name="times"/> {{ numberWrong }}
+      <fa-icon class="wrong" icon="fa-times"/> {{ numberWrong }}
     </div>
     <div class="metric-row">
-      <icon name="clock-o"/>
+      <fa-icon icon="fa-clock"/>
         {{ Math.floor(duration / 60) }} min
         {{ duration - Math.floor(duration / 60) * 60 }} s
     </div>
@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import Icon from 'vue-awesome';
 import PButton from '../../components/PButton.vue';
 
 const methods = {
@@ -47,7 +46,6 @@ const model = {
 export default {
   name: 'challenge-result',
   components: {
-    Icon,
     PButton
   },
   methods,

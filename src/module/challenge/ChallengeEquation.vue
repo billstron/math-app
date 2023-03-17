@@ -4,14 +4,17 @@
       <number-display
         :value="equation[0]"
       />
-      <icon
+      <fa-icon
         class="math-sign"
-        v-bind:name="signIcon"
+        :icon="signIcon"
       />
       <number-display
         :value="equation[1]"
       />
-      <span class="math-sign">=</span>
+      <fa-icon
+        class="math-sign"
+        icon="fa-equals"
+      />
       <number-input
         tag="input-tag"
         v-bind:value="value"
@@ -28,61 +31,59 @@
 </template>
 
 <script>
-import Icon from 'vue-awesome';
 import PButton from '../../components/PButton.vue';
 import NumberDisplay from '../../components/NumberDisplay.vue';
 import NumberInput from '../../components/NumberInput.vue';
 
-const model = {
-  signIcon: 'times',
-};
-
-const methods = {
-  checkIt(event) {
-    document.getElementById('input-tag').focus();
-    if (this.value == null) {
-      return null;
-    }
-    const correctAnswer = this.compute(this.equation[0], this.equation[1]);
-    this.$emit('answered', correctAnswer == this.value);
-  },
-
-  onInput (value) {
-    this.$emit('input', value);
-  },
-
-  compute: (a, b) => null,
-}
-
-const signMap = {
-  multiplication : {
-    icon: 'times',
-    fn: (a, b) => a * b,
-  },
-  addition: {
-    icon: 'plus',
-    fn: (a, b) => a + b,
-  },
-  subtraction: {
-    icon: 'minus',
-    fn: (a, b) => a - b,
-  }
-};
-
 export default {
-  name: 'equation',
+  name: 'ChallengeEquation',
   props: [ 'equation', 'value', 'tag', 'mathType' ],
   components: {
-    Icon,
     PButton,
     NumberDisplay,
     NumberInput
   },
-  data: () => model,
-  methods,
+  data() {
+    return {
+      signMap: {
+        multiplication : {
+          icon: 'fa-times',
+          fn: (a, b) => a * b,
+        },
+        addition: {
+          icon: 'fa-plus',
+          fn: (a, b) => a + b,
+        },
+        subtraction: {
+          icon: 'fa-minus',
+          fn: (a, b) => a - b,
+        }
+      },
+    };
+  },
+  computed: {
+    signIcon() {
+      return this.signMap[this.mathType].icon;
+    },
+  },
+  methods: {
+    checkIt() {
+      document.getElementById('input-tag').focus();
+      if (this.value == null) {
+        return null;
+      }
+      const correctAnswer = this.compute(this.equation[0], this.equation[1]);
+      this.$emit('answered', correctAnswer == this.value);
+    },
+
+    onInput (value) {
+      this.$emit('input', value);
+    },
+
+    compute: () => null,
+  },
   mounted () {
-    this.signIcon = signMap[this.mathType].icon;
-    this.compute = signMap[this.mathType].fn;
+    this.compute = this.signMap[this.mathType].fn;
   },
 }
 </script>
@@ -107,10 +108,7 @@ export default {
   line-height: 44px;
   margin-left: 10px;
   margin-right: 10px;
-}
-
-.fa-icon {
-  margin: 10px;
+  margin-top: 12px;
 }
 
 </style>

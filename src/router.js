@@ -1,21 +1,26 @@
-import VueRouter from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 
-import Home from './module/home/index.vue';
+import ChallengeSelection from './module/challenge-selection/index.vue';
 import Challenge from './module/challenge/index.vue';
 import ChallengeResult from './module/challenge-result/index.vue';
 
 const routes = [{
   path: '/',
-  component: Home,
+  component: ChallengeSelection,
+  name: 'Selection',
 }, {
   path: '/challenge/:mathType',
   component: Challenge,
+  name: 'Challenge',
 }, {
   path: '/challenge/:mathType/result',
   component: ChallengeResult,
+  name: 'Results',
 },];
 
-
-const router = new VueRouter({ routes });
+const router = createRouter({
+  history : createWebHashHistory(),
+  routes,
+});
 
 export default router;

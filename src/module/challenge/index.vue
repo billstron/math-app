@@ -1,24 +1,24 @@
 <template>
   <div class="challenge">
-    <equation
-      v-bind:mathType="mathType"
-      v-bind:equation="equation"
+    <challenge-equation
+      :mathType="mathType"
+      :equation="equation"
       v-model="answer"
       v-on:answered="answered"
     />
     <div class="overlay" v-if="right || wrong">
-      <icon class="answer right" v-if="right" name="check"/>
-      <icon class="answer wrong" v-if="wrong" name="times"/>
+      <fa-icon class="answer right" v-if="right" icon="fa-check"/>
+      <fa-icon class="answer wrong" v-if="wrong" icon="fa-times"/>
     </div>
 
     <div class="info-row">
       <div class="timer">
-        <icon name="clock-o"/>
+        <fa-icon icon="fa-clock"/>
           {{ mins }} min
           {{ secs }} s
       </div>
       <div class="count">
-        <icon name="hashtag"/>
+        <fa-icon icon="fa-hashtag"/>
         {{ answers.length + 1 }} / {{ maxQuestions }}
       </div>
     </div>
@@ -26,8 +26,7 @@
 </template>
 
 <script>
-import Icon from 'vue-awesome';
-import Equation from './equation.vue';
+import ChallengeEquation from './ChallengeEquation.vue';
 
 const model = {
   limits: {
@@ -44,7 +43,6 @@ const model = {
   startTime: null,
   duration: 0,
   interval: null,
-  mathType: null,
 };
 
 const methods = {
@@ -105,10 +103,9 @@ const methods = {
 };
 
 export default {
-  name: 'challenge',
+  name: 'ChallengeMain',
   components: {
-    Icon,
-    Equation,
+    ChallengeEquation,
   },
   data() {
     return model;
@@ -120,15 +117,16 @@ export default {
     },
     secs() {
       return Math.round(this.duration - this.mins * 60 );
+    },
+    mathType() {
+      const { mathType } = this.$route.params;
+      return mathType;
     }
-  },
-  beforeMount() {
-    this.mathType = this.$router.currentRoute.params.mathType;
   },
   mounted() {
     this.setup();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.teardown();
   },
 }

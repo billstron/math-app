@@ -1,18 +1,22 @@
-// The following line loads the standalone build of Vue instead of the runtime-only build,
-// so you don't have to do: import Vue from 'vue/dist/vue'
-// This is done with the browser options. For the config, see package.json
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import VueCookie from 'vue-cookie';
+import { createApp } from 'vue';
 
+/* import the fontawesome core */
+import { library } from '@fortawesome/fontawesome-svg-core';
+
+/* import font awesome icon component */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+/* import specific icons */
+import { faPlus, faMinus, faTimes, faCheck, faClock, faHashtag, faEquals } from '@fortawesome/free-solid-svg-icons';
+
+/* add icons to the library */
+library.add(faPlus, faMinus, faTimes, faCheck, faClock, faHashtag, faEquals);
+
+import App from './App.vue'
 import router from './router';
-import App from './app.vue';
 
-Vue.use(VueRouter);
-Vue.use(VueCookie);
+const app = createApp(App);
 
-const app = new Vue({
-  router,
-  el: '#app',
-  render: h => h(App)
-});
+app.component('fa-icon', FontAwesomeIcon);
+app.use(router);
+app.mount('#app');

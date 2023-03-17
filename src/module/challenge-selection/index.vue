@@ -4,19 +4,19 @@
       <h1>20-Q Challenge</h1>
       <div class="challenge-selector">
         <router-link class="button" to="/challenge/addition">
-          <icon name="plus"/>
+          <fa-icon icon="fa-plus" />
         </router-link>
         <div class="label">Addition</div>
       </div>
       <div class="challenge-selector">
         <router-link class="button" to="/challenge/subtraction">
-          <icon name="minus"/>
+          <fa-icon icon="fa-minus" />
         </router-link>
         <div class="label">Subtraction</div>
       </div>
       <div class="challenge-selector">
         <router-link class="button" to="/challenge/multiplication">
-          <icon name="times"/>
+          <fa-icon icon="fa-times" />
         </router-link>
         <div class="label">Multiplication</div>
       </div>
@@ -25,13 +25,8 @@
 </template>
 
 <script>
-import Icon from 'vue-awesome';
-
 export default {
-  components: {
-    Icon,
-  },
-  name: 'home',
+  name: 'ChallengeSelection',
 }
 </script>
 
