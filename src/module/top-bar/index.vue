@@ -1,7 +1,8 @@
 <template>
   <div class="top-bar">
     <div class="left-content">
-      <router-link to="/">Math App</router-link>
+      <router-link v-if="showBack" to="/"><fa-icon icon="fa-chevron-left"></fa-icon></router-link>
+      Math App
     </div>
   </div>
 </template>
@@ -9,6 +10,11 @@
 <script>
 export default {
   name: 'top-bar',
+  computed: {
+    showBack() {
+      return this.$route.path !== '/';
+    },
+  },
 }
 </script>
 
